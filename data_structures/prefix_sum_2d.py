@@ -1,21 +1,22 @@
 class PrefixSum2D:
     def __init__(self, matrix: list[list[int]]):
-        self.n = len(matrix)
-        self.m = len(matrix[0]) if self.n else 0
+        self.m = len(matrix)
+        self.n = len(matrix[0]) if self.m else 0
 
-        self.ps = [[0] * (self.m + 1) for _ in range(self.n + 1)]
-        for i in range(self.n):
-            for j in range(self.m):
+        self.ps = [[0] * (self.n + 1) for _ in range(self.m + 1)]
+        for i in range(self.m):
+            for j in range(self.n):
                 self.ps[i + 1][j + 1] = matrix[i][j] + self.ps[i + 1][j] + self.ps[i][j + 1] - self.ps[i][j]
 
     def query(self, r1: int, c1: int, r2: int, c2: int) -> int:
         r1, c1 = max(0, r1), max(0, c1)
-        r2, c2 = min(self.n - 1, r2), min(self.m - 1, c2)
+        r2, c2 = min(self.m - 1, r2), min(self.n - 1, c2)
 
         if r1 > r2 or c1 > c2:
             return 0
 
         return self.ps[r2 + 1][c2 + 1] - self.ps[r2 + 1][c1] - self.ps[r1][c2 + 1] + self.ps[r1][c1]
+
 
 if __name__ == "__main__":
     # Basic matrix
@@ -97,7 +98,7 @@ if __name__ == "__main__":
     assert ps4.query(-1, -1, 10, 10) == 10
 
     # Empty matrix
-    matrix5 = []
+    matrix5: list[list[int]] = []
     ps5 = PrefixSum2D(matrix5)
 
     assert ps5.query(0, 0, 0, 0) == 0
